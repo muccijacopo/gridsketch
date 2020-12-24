@@ -1,0 +1,24 @@
+:host {
+    display: block;
+    // background: #222222;
+    background: #222222;
+    height: 100%;
+    width: 100%;
+}
+
+.container {
+    height: 100%;
+    width: 100%;
+}
+
+svg {
+    height: 100%;
+    width: 100%;
+    line {
+        stroke: white;
+        stroke-width: 3px;
+    }
+    line.grid {
+        stroke-width: .5px;
+    }
+}
