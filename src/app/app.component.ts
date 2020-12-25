@@ -26,6 +26,9 @@ export class AppComponent {
   constructor(private stateService: StateService) {
   }
 
+  columnWidth: number;
+  rowHeight: number;
+
   ngOnInit() {
     // setInterval(() => {
     //   this.viewBox = "0 0 0 0";
@@ -49,23 +52,26 @@ export class AppComponent {
   }
 
   initGrid() {
+    const columnsNumber = 15;
+    const rowsNumber = 15;
     const { width, height } = this.containerRef.nativeElement.getBoundingClientRect();
-    const columns = width / 100;
-    const rows = height / 100;
-    for (let c = 0; c < columns; c++) {
+    this.columnWidth = width / columnsNumber;
+    this.rowHeight = height / rowsNumber;
+    for (let c = 0; c < columnsNumber; c++) {
+      console.log(0, height, c * this.columnWidth, (c+1)*this.columnWidth)
       this.grid.push({
         y1: 0, 
         y2: height,
-        x1: 100 * c,
-        x2: 100 * c,
+        x1: c * this.columnWidth,
+        x2: c * this.columnWidth,
       })
     }
-    for (let r = 0; r < rows; r++) {
+    for (let r = 0; r < rowsNumber; r++) {
       this.grid.push({
         x1: 0, 
         x2: width,
-        y1: 100 * r,
-        y2: 100 * r,
+        y1: this.rowHeight * r,
+        y2: this.rowHeight * r,
       })
     }
   }
@@ -100,11 +106,22 @@ export class AppComponent {
     this.currentPath.y2 = y;
   }
 
+  getNearestGridPoint(x: number, y: number) {
+    const realX = (Math.round(x / this.columnWidth)) * this.columnWidth;
+    const realY = (Math.round(y / this.rowHeight)) * this.rowHeight;
+    return { realX, realY }
+  }
+
   onMouseUp(event: MouseEvent) {
     this.isEditing = false;
     const { x, y } = this.getRelativeXY(event.x, event.y);
-    this.currentPath.x2 = x;
-    this.currentPath.y2 = y;
+    const { realX: realX2, realY: realY2 } = this.getNearestGridPoint(x, y);
+    const { realX: realX1, realY: realY1 } = this.getNearestGridPoint(this.currentPath.x1, this.currentPath.y1);
+
+    this.currentPath.x1 = realX1
+    this.currentPath.x2 = realX2
+    this.currentPath.y1 = realY1;
+    this.currentPath.y2 = realY2;
 
     this.lines.push({
       x1: this.currentPath.x1,
