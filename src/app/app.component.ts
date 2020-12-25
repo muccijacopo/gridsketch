@@ -36,6 +36,9 @@ export class AppComponent {
     // setInterval(() => {
     //   this.viewBox = "0 0 0 0";
     // }, 3000)
+    window.addEventListener("resize", () => {
+      this.initGrid();
+    })
   }
 
   ngAfterViewInit() {
@@ -73,6 +76,7 @@ export class AppComponent {
   }
 
   initGrid() {
+    this.grid = [];
     const columnsNumber = 15;
     const rowsNumber = 15;
     const { width, height } = this.containerRef.nativeElement.getBoundingClientRect();
