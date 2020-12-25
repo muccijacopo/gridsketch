@@ -1,6 +1,6 @@
 <div #container class="container" (mousedown)="down($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
-  <button (click)="clearAll()">Clear</button>
-  <svg #svg>
+  <side-panel (clearAll)="clearAll()" (switch)="switch()"></side-panel>
+  <svg #svg [attr.viewBox]="viewBox">
     <line *ngFor="let l of grid"
     class="grid"
     [attr.x1]="l.x1"

@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { StateService } from './state.service';
 
 interface Line {
   x1: number;
@@ -20,8 +21,23 @@ export class AppComponent {
   grid: Line[] = [];
   lines: Line[] = [];
 
+  viewBox: string;
+
+  constructor(private stateService: StateService) {
+  }
+
+  ngOnInit() {
+    // setInterval(() => {
+    //   this.viewBox = "0 0 0 0";
+    // }, 3000)
+  }
+
   ngAfterViewInit() {
     this.initGrid();
+  }
+
+  switch() {
+    this.stateService.switch();
   }
 
   getRelativeXY(x: number, y: number) {
