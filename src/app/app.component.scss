@@ -15,10 +15,14 @@ svg {
     height: 100%;
     width: 100%;
     line {
-        stroke: white;
+        stroke: rgb(201, 201, 201);
         stroke-width: 3px;
     }
     line.grid {
         stroke-width: .5px;
+    }
+    line.selected {
+        fill: #ffffff;
+        stroke-width: 10px;
     }
 }

@@ -1,4 +1,4 @@
-<div #container class="container" (mousedown)="down($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)">
+<div #container class="container" (mousedown)="down($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)" (keyup)="onKeyDown($event)" tabindex="0">
   <side-panel (clearAll)="clearAll()" (switch)="switch()"></side-panel>
   <svg #svg [attr.viewBox]="viewBox">
     <line *ngFor="let l of grid"
@@ -8,11 +8,13 @@
     [attr.y1]="l.y1"
     [attr.y2]="l.y2"
 ></line>
-    <line *ngFor="let line of lines" 
+    <line *ngFor="let line of lines; let idx = index"
+    [id]="idx"
     [attr.x1]="line.x1"
     [attr.x2]="line.x2"
     [attr.y1]="line.y1"
     [attr.y2]="line.y2"
+    [ngClass]="{ 'selected': (currentDraggingPath$ | async) === idx}"
     ></line>
     <line *ngIf="currentPath as p"
       [attr.x1]="p.x1"

@@ -1,4 +1,5 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { StateService } from './state.service';
 
 interface Line {
@@ -26,6 +27,8 @@ export class AppComponent {
   constructor(private stateService: StateService) {
   }
 
+  currentDraggingPath$ = new BehaviorSubject<number>(null);
+
   columnWidth: number;
   rowHeight: number;
 
@@ -49,6 +52,24 @@ export class AppComponent {
     const offsetX = childX - parentX;
     const offsetY = childY - parentY;
     return { x: x - offsetX, y: y - offsetY }
+  }
+
+  onPathItemClick(event: MouseEvent, pathIndex: number) {
+    this.currentPath = null;
+    this.currentDraggingPath$.next(pathIndex);
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    console.log('del')
+    if (event.key === 'Delete') {
+      console.log(this.currentDraggingPath$.getValue())
+      if (this.currentDraggingPath$.getValue() !== null) {
+        const linesCopy = [...this.lines];
+        linesCopy.splice(this.currentDraggingPath$.getValue(), 1);
+        this.lines = linesCopy;
+        this.currentDraggingPath$.next(null)
+      }
+    }
   }
 
   initGrid() {
@@ -89,13 +110,21 @@ export class AppComponent {
   }
 
   down(event: MouseEvent) {
-    this.isEditing = true;
-    const { x, y } = this.getRelativeXY(event.x, event.y);
-    this.currentPath = {
-      x1: x,
-      y1: y,
-      x2: x,
-      y2: y
+    console.log(event.target)
+    const targetId = (event.target as HTMLElement).id;
+    console.log(targetId)
+    if (targetId) {
+      this.currentDraggingPath$.next(+targetId);
+      console.log("qui")
+    } else {
+      this.isEditing = true;
+      const { x, y } = this.getRelativeXY(event.x, event.y);
+      this.currentPath = {
+        x1: x,
+        y1: y,
+        x2: x,
+        y2: y
+      }
     }
   }
 
