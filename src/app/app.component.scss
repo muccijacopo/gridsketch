@@ -17,12 +17,12 @@ svg {
     line {
         stroke: rgb(201, 201, 201);
         stroke-width: 3px;
+        cursor: pointer;
     }
     line.grid {
         stroke-width: .5px;
     }
     line.selected {
-        fill: #ffffff;
-        stroke-width: 10px;
+        stroke: #ffe20a;
     }
 }

@@ -27,7 +27,7 @@ export class AppComponent {
   constructor(private stateService: StateService) {
   }
 
-  currentDraggingPath$ = new BehaviorSubject<number>(null);
+  selectedPath$ = new BehaviorSubject<number>(null);
 
   columnWidth: number;
   rowHeight: number;
@@ -60,16 +60,23 @@ export class AppComponent {
 
   onPathItemClick(event: MouseEvent, pathIndex: number) {
     this.currentPath = null;
-    this.currentDraggingPath$.next(pathIndex);
+    this.selectedPath$.next(pathIndex);
   }
 
   onKeyDown(event: KeyboardEvent) {
     if (event.key === 'Delete') {
-      if (this.currentDraggingPath$.getValue() !== null) {
+      if (this.selectedPath$.getValue() !== null) {
         const linesCopy = [...this.lines];
-        linesCopy.splice(this.currentDraggingPath$.getValue(), 1);
+        linesCopy.splice(this.selectedPath$.getValue(), 1);
         this.lines = linesCopy;
-        this.currentDraggingPath$.next(null)
+        this.selectedPath$.next(null)
+      }
+    }
+    if (event.key === 'z' && (event.ctrlKey || event.metaKey)) {
+      if (this.lines.length) {
+        const lines = [...this.lines]
+        lines.pop();
+        this.lines = lines;
       }
     }
   }
@@ -127,10 +134,13 @@ export class AppComponent {
   }
 
   down(event: MouseEvent) {
+    console.log(event.target)
     const targetId = (event.target as HTMLElement).id;
+    console.log(targetId)
     if (targetId) {
-      this.currentDraggingPath$.next(+targetId);
+      this.selectedPath$.next(+targetId);
     } else {
+      this.selectedPath$.next(null);
       this.isEditing = true;
       const { x, y } = this.getRelativeXY(event.x, event.y);
       this.currentPath = {
@@ -156,6 +166,7 @@ export class AppComponent {
   }
 
   onMouseUp(event: MouseEvent) {
+    if (!this.isEditing) return;
     this.isEditing = false;
     const { x, y } = this.getRelativeXY(event.x, event.y);
     const { realX: realX2, realY: realY2 } = this.getNearestGridPoint(x, y);
@@ -171,6 +182,7 @@ export class AppComponent {
       x2: this.currentPath.x2,
       y1: this.currentPath.y1,
       y2: this.currentPath.y2
-    })
+    });
+    this.currentPath = null;
   }
 }
