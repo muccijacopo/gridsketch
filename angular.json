@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "websketch": {
+    "gridsketch": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -68,18 +68,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "websketch:build"
+            "browserTarget": "gridsketch:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "websketch:build:production"
+              "browserTarget": "gridsketch:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "websketch:build"
+            "browserTarget": "gridsketch:build"
           }
         },
         "test": {
@@ -116,16 +116,16 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "websketch:serve"
+            "devServerTarget": "gridsketch:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "websketch:serve:production"
+              "devServerTarget": "gridsketch:serve:production"
             }
           }
         }
       }
     }
   },
-  "defaultProject": "websketch"
+  "defaultProject": "gridsketch"
 }
