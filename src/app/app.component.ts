@@ -38,6 +38,7 @@ export class AppComponent {
     // }, 3000)
     window.addEventListener("resize", () => {
       this.initGrid();
+      this.resizePaths();
     })
   }
 
@@ -63,9 +64,7 @@ export class AppComponent {
   }
 
   onKeyDown(event: KeyboardEvent) {
-    console.log('del')
     if (event.key === 'Delete') {
-      console.log(this.currentDraggingPath$.getValue())
       if (this.currentDraggingPath$.getValue() !== null) {
         const linesCopy = [...this.lines];
         linesCopy.splice(this.currentDraggingPath$.getValue(), 1);
@@ -73,6 +72,21 @@ export class AppComponent {
         this.currentDraggingPath$.next(null)
       }
     }
+  }
+
+  resizePaths() {
+    const lines = this.lines.map(line => {
+     const { x1, x2, y1, y2 } = line;
+    const { realX: newX1, realY: newY1 } = this.getNearestGridPoint(x1, y1);
+    const { realX: newX2, realY: newY2 } = this.getNearestGridPoint(x2, y2);
+      return {
+        x1: newX1,
+        x2: newX2,
+        y1: newY1,
+        y2: newY2
+      }
+    });
+    this.lines = lines;
   }
 
   initGrid() {
@@ -83,7 +97,6 @@ export class AppComponent {
     this.columnWidth = width / columnsNumber;
     this.rowHeight = height / rowsNumber;
     for (let c = 0; c < columnsNumber; c++) {
-      console.log(0, height, c * this.columnWidth, (c+1)*this.columnWidth)
       this.grid.push({
         y1: 0, 
         y2: height,
@@ -114,12 +127,9 @@ export class AppComponent {
   }
 
   down(event: MouseEvent) {
-    console.log(event.target)
     const targetId = (event.target as HTMLElement).id;
-    console.log(targetId)
     if (targetId) {
       this.currentDraggingPath$.next(+targetId);
-      console.log("qui")
     } else {
       this.isEditing = true;
       const { x, y } = this.getRelativeXY(event.x, event.y);
