@@ -23,9 +23,13 @@ export class AppComponent {
   lines: Line[] = [];
 
   viewBox: string;
+  zoomValue: number = 0;
 
   constructor(private stateService: StateService) {
   }
+
+
+  isDragMode = this.stateService.state.isDragMode;
 
   selectedPath$ = new BehaviorSubject<number>(null);
 
@@ -39,6 +43,7 @@ export class AppComponent {
     window.addEventListener("resize", () => {
       this.initGrid();
       this.resizePaths();
+      this.updateViewBox();
     })
   }
 
@@ -48,6 +53,29 @@ export class AppComponent {
 
   switch() {
     this.stateService.switch();
+  }
+
+  onWheel(event: WheelEvent) {
+    const incValue = -(event.deltaY);
+    const zoomValue = this.zoomValue + incValue < 0 ? this.zoomValue : this.zoomValue + incValue
+    // console.log(this.zoomValue);
+    this.zoomValue = zoomValue / 10;
+    this.updateViewBox();
+
+    // if (event.deltaY < 0) {
+    //   this.updateViewBox(2);
+    // } else this.updateViewBox(1)
+  }
+
+  getContainerDim() {
+    const { width, height } = this.containerRef.nativeElement.getBoundingClientRect();
+    return { width, height };
+  }
+
+  updateViewBox(zoom: number = this.zoomValue) {
+    const { width, height } = this.getContainerDim();
+    zoom = zoom < 1 ? 1 : zoom;
+    this.viewBox = `0 0 ${width / zoom} ${height / zoom}`;
   }
 
   getRelativeXY(x: number, y: number) {

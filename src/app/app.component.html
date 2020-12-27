@@ -1,4 +1,4 @@
-<div #container class="container" (mousedown)="down($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)" (keydown)="onKeyDown($event)" tabindex="0">
+<div #container class="container" (wheel)="onWheel($event)" (mousedown)="down($event)" (mouseup)="onMouseUp($event)" (mousemove)="onMouseMove($event)" (keydown)="onKeyDown($event)" tabindex="0">
   <side-panel (clearAll)="clearAll()" (switch)="switch()"></side-panel>
   <svg #svg [attr.viewBox]="viewBox">
     <line *ngFor="let l of grid"
